@@ -1,0 +1,38 @@
+{% extends "posts/layout.html" %}
+
+{% block title %} {{ post.title }} {% endblock %}
+
+{% block body %}
+    <p>{{ host }}</p>
+    <a href="/posts/index">Back</a>
+    
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+    
+    {% if post %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.body|safe }}</p>
+    
+    <p>Coments: {{ post.comment_set.count }}</p>
+    <ul>
+    {% for comment in post.comment_set.all %}
+        {% include "posts/comment.html" %}
+    {% endfor %}
+    </ul>
+    <form method="post">
+        {% csrf_token %}
+        
+        <input name="post" type="hidden" value="{{ post.id  }}" />
+        <ul>
+        <li>
+        <input name="name" type="text" value="{{ data.name }}" />
+        <p>{{ form.errors.name|safe }}</p>
+        </li>
+        <li><textarea name="message">{{ data.message }}</textarea></li>
+        <p>{{ form.errors.message|safe }}</p>
+        <li><input type="submit" value="Send" /></li>
+        </ul>
+    </form>
+    {% endif %}
+{% endblock %}
